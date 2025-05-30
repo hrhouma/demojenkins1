@@ -1,15 +1,26 @@
+
 pipeline {
     agent any
-
-
+    environment {
+        PATH = "${env.PATH}:/usr/bin/python3"
+    }
     stages {
-        stage('List Files') {
+        stage('Checkout') {
             steps {
-                bat '''
-                C:
-                cd \\
-                dir
-                '''
+               git branch: 'main', url: 'https://github.com/hrhouma/hello-python.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'echo "Running on Unix"'
+                        // Add your Unix-specific build commands here
+                    } else {
+                        bat 'echo "Running on Windows"'
+                        // Add your Windows-specific build commands here
+                    }
+                }
             }
         }
     }
